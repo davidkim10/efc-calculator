@@ -9,16 +9,16 @@ const success = clc.green;
 export class Logger {
   constructor() {}
 
-  info(..._args: unknown[]) {
-    console.log(info(...arguments));
-  }
-
   log(..._args: unknown[]) {
     console.log(...arguments);
   }
 
+  info(..._args: unknown[]) {
+    console.log(info('[INFO]'), ...arguments);
+  }
+
   error(..._args: unknown[]) {
-    console.log(error(...arguments));
+    console.log(error('[ERROR]'), ...arguments);
   }
 
   start() {

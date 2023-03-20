@@ -1,11 +1,14 @@
 import express from 'express';
 import { Browser } from './browser/Browser.js';
 import { Calculator } from './efc/Calculator.js';
+import { Logger } from './browser/Logger.js';
 
 const app = express();
 const PORT = 8080;
+const logger = new Logger();
 
 app.get('/', async (_req, res) => {
+  logger.start();
   const COLLEGEBOARD_EFC_URL = 'https://npc.collegeboard.org/app/efc/start';
   const browser = new Browser('College Board EFC Calculator');
   try {

@@ -4,18 +4,10 @@ const info = clc.cyanBright;
 const notice = clc.yellowBright;
 const success = clc.green;
 
-interface ILogMessage {
-  date: number | Date;
-  seen: string;
-  type: string;
-  log: any;
-}
+// TODO: Swap out logger to third party package
 
 export class Logger {
-  public logs: ILogMessage[];
-  constructor() {
-    this.logs = [];
-  }
+  constructor() {}
 
   info(..._args: unknown[]) {
     console.log(info(...arguments));
@@ -29,20 +21,14 @@ export class Logger {
     console.log(error(...arguments));
   }
 
-  scrape(message: any) {
-    const log = notice('[SCRAPE]') + ` ${message}`;
-    this.log(log, message, 'scrape');
-  }
-
   start() {
-    const message = '• RUNNING SCRAPER •';
+    const message = '• RUNNING EFC CALCULATOR •';
     const intro = `....\n ${message} \n....\n`;
-    const style = { '.': notice('-----') };
-    console.log(clc.art(intro, style), message, 'start');
+    const style = { '.': notice('-----------') };
+    console.log(clc.art(intro, style));
   }
 
-  success(message: string) {
-    const log = success('[SUCCESS]') + ` ${message}`;
-    console.log(log);
+  success(..._args: unknown[]) {
+    console.log(success('[SUCCESS]'), ...arguments);
   }
 }

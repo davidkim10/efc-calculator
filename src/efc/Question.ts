@@ -1,16 +1,9 @@
 import type { ElementHandle } from 'puppeteer';
-import {
-  IFormField,
-  FieldType,
-  IFormFieldRadio,
-  IFormFieldSelect,
-  IRadioOption,
-  ISelectOption,
-} from './types.js';
+import { FieldType, IFormField, IRadioOption, ISelectOption } from './types.js';
 
 export class Question {
   public label: string = '';
-  public formField: IFormField | IFormFieldRadio | IFormFieldSelect;
+  public formField: IFormField;
 
   constructor(public elementHandle: ElementHandle) {}
 

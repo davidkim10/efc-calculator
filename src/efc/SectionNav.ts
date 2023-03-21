@@ -37,9 +37,9 @@ export class SectionNav {
   private async checkLastStep(): Promise<boolean> {
     await this.page.waitForSelector('a.nav-link');
     return await this.page.$$eval('a.nav-link', (links) => {
-      const isLastIndex = links.length - 1;
-      const activeLink = links.filter((link) => link.classList.contains('active'))[0];
-      return links.indexOf(activeLink) === isLastIndex;
+      const index = links.findIndex((link) => link.classList.contains('active'));
+      const lastIndex = links.length - 1;
+      return index === lastIndex;
     });
   }
 

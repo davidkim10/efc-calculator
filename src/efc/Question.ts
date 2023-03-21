@@ -6,8 +6,6 @@ import {
   IFormFieldSelect,
   IRadioOption,
   ISelectOption,
-  HTMLInputElementHandle,
-  HTMLSelectElementHandle,
 } from './types.js';
 
 export class Question {

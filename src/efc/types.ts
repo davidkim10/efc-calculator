@@ -2,9 +2,6 @@
 
 import { ElementHandle } from 'puppeteer';
 
-export type HTMLInputElementHandle = ElementHandle<HTMLInputElement>;
-export type HTMLSelectElementHandle = ElementHandle<HTMLSelectElement>;
-
 export enum FieldType {
   Text = 'INPUT',
   Select = 'SELECT',

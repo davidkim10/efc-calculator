@@ -1,5 +1,14 @@
 import type { ElementHandle } from 'puppeteer';
-import { IFormField, FieldType, IFormFieldRadio, IFormFieldSelect } from './types.js';
+import {
+  IFormField,
+  FieldType,
+  IFormFieldRadio,
+  IFormFieldSelect,
+  IRadioOption,
+  ISelectOption,
+  HTMLInputElementHandle,
+  HTMLSelectElementHandle,
+} from './types.js';
 
 export class Question {
   public label: string = '';
@@ -16,43 +25,46 @@ export class Question {
     return await this.elementHandle.$eval('label', (label) => label.innerText);
   }
 
-  private async getField() {
+  private async getField(): Promise<IFormField> {
     const select = await this.elementHandle.$('select');
     const text = await this.elementHandle.$('input[type="text"]');
     const radio = await this.elementHandle.$('mat-radio-group');
-    const targetEl = [select, text, radio].filter(Boolean)[0] as ElementHandle;
-    const field = await targetEl.evaluate(({ id, tagName }) => ({
-      id,
-      tagName,
-    }));
-    let options = [];
+    const fieldElement = [select, text, radio].filter(Boolean)[0] as ElementHandle;
+    const { id, tagName } = await fieldElement.evaluate(this.getElementAttributes);
+    let options: ReadonlyArray<ISelectOption | IRadioOption> = [];
 
-    switch (field.tagName) {
+    switch (tagName) {
       case FieldType.Select:
-        const selectOptions = await this.getFieldOptions(targetEl, 'option');
-        options = selectOptions;
+        options = await this.getFieldOptions(fieldElement, 'option');
         break;
 
       case FieldType.Radio:
-        const radioOptions = await this.getFieldOptions(targetEl, 'input[type="radio"]');
-        options = radioOptions;
+        options = await this.getFieldOptions(fieldElement, 'input[type="radio"]');
         break;
     }
 
-    return { ...field, element: targetEl, options };
+    return { id, tagName, element: fieldElement, options };
   }
 
   private async getFieldOptions(
-    elementHandler: ElementHandle,
-    selector: string
+    field: ElementHandle,
+    selector: 'option' | 'input[type="radio"]'
   ): Promise<any> {
     const options = [];
-    const fieldOptions = await elementHandler.$$(selector);
-    for (const option of fieldOptions) {
-      const valueHandle = await option.getProperty('value');
-      const value = (await valueHandle.jsonValue()) as string;
-      options.push({ element: option, value });
+    const elements = await field.$$(selector);
+    for (const element of elements) {
+      const value = await element.evaluate((el) => el.value);
+      options.push({ element, value });
     }
     return options;
+  }
+
+  private getElementAttributes(element: Element): Record<string, string> {
+    const { tagName, attributes } = element;
+    const attrs: Record<string, string> = { tagName };
+    for (const { name, value } of attributes) {
+      attrs[name] = value;
+    }
+    return attrs;
   }
 }
